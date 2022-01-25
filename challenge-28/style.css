@@ -21,8 +21,12 @@ input {
   border-radius: 5px;
 }
 
-textarea {
-  margin-top: 5px;
+.carregando {
+  height: 40px;
+  width: 500px;
+  border-radius: 10px;
+  background-color: #ccabab;
+  margin: auto;
 }
 
 .cepInfo {

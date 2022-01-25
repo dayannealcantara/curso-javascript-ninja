@@ -85,18 +85,40 @@ formCEP.on('submit', handleSubmitFormCEP);
 
 function handleSubmitFormCEP(event){
   event.preventDefault();
-  var url = 'https://viacep.com.br/ws/[CEP]/json/'.replace('[CEP]', inputCEP.get()[0].value);
+  var url = getUrl();
   ajax.open('GET', url);
   ajax.send();
   ajax.addEventListener('readystatechange', handleReadyStateChange)
 }
 
-function  handleReadyStateChange() {
-  if(ajax.readyState === 4 && ajax.status === 200) {
-    console.log('Popular formulário', ajax.responseText);
-  }
-  console.log('carregando...');
+function getUrl(){
+  return 'https://viacep.com.br/ws/[CEP]/json/'.replace('[CEP]', inputCEP.get()[0].value.replace(/\D/g, ''));
 }
+
+function  handleReadyStateChange() {
+  if(isRequestOk())
+    fillCEPFields();
+ }
+
+ function isRequestOk(){
+   return ajax.readyState ===4 && ajax.status === 200;
+ }
+
+ function fillCEPFields(){
+   var data = JSON.parse(ajax.responseText);
+   var logradouro = new DOM('[data-js="logradouro"]');
+   logradouro.get()[0].textContent = data.logradouro;
+   var bairro = new DOM('[data-js="bairro"]');
+   bairro.get()[0].textContent = data.bairro;
+   var estado = new DOM('[data-js="estado"]');
+   estado.get()[0].textContent = data.uf;
+   var cidade = new DOM('[data-js="cidade"]');
+   cidade.get()[0].textContent = data.localidade;
+   var cep = new DOM('[data-js="cep"]');
+   cep.get()[0].textContent = data.cep;
+ }
+
+
 
 
 
